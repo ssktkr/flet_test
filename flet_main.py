@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-import flet as ft
-import os
-import test
 
 def main(page: ft.Page):
 
@@ -32,8 +26,8 @@ def main(page: ft.Page):
             page.update()
         else:
             path = selected_filepath.value
-            #times,urls = test.file_open(path)
-            li = [["18:10","a.com"],["18:11","b.com"],["18:20","c.com"]]
+            #li = test.file_open(path)
+            li = [["18:10","a.co"],["18:11","b.com"],["18:20","c.com"]]
             logs = []
             
             for i,j in li:
@@ -44,27 +38,39 @@ def main(page: ft.Page):
 
                 )
                 logs.append(row)
-            data.columns = [
-                    ft.DataColumn(
-                        ft.Text("Time"),
-                        tooltip="アクセス時刻",
-                        on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
-                    ),
-                    ft.DataColumn(
-                        ft.Text("URL"),
-                        tooltip="アクセスされたドメイン",
-                        on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
-                    ),
-                ]
+            #data.columns = [
+            #        ft.DataColumn(
+            #            ft.Text("Time"),
+            #            tooltip="アクセス時刻",
+            #            on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
+            #        ),
+            #        ft.DataColumn(
+            #            ft.Text("URL"),
+            #            tooltip="アクセスされたドメイン",
+            #            on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
+            #        ),
+            #    ]
                 
             data.rows = logs
-            
+
+            #li2 = test.tldcheck()
+            li2 = [["18:10","a.co"]]
+            logs2 = []
+
+            for k,r in li2:
+                row2 = ft.DataRow(
+                    [
+                        ft.DataCell(ft.Text(k)),ft.DataCell(ft.Text(r))
+                    ],
+                )
+                logs2.append(row2)
+            data2.rows = logs2
             
             page.update()
             
             
     
-
+    #URL List用
     data = ft.DataTable(
             width=700,
             bgcolor="white",
@@ -106,7 +112,51 @@ def main(page: ft.Page):
                 
           #  ],
     )
-    
+
+
+    #Bad TLD list用
+    data2 = ft.DataTable(
+            width=700,
+            bgcolor="white",
+            #border=ft.border.all(2, "gray"),
+            #border_radius=10,
+            #vertical_lines=ft.border.BorderSide(3, "black"),
+            horizontal_lines=ft.border.BorderSide(1, "gray"),
+            sort_column_index=0,
+            sort_ascending=True,
+            heading_row_color=ft.colors.BLACK12,
+            heading_row_height=100,
+            data_row_color={"hovered": "0x30FF0000"},
+            show_checkbox_column=True,
+            divider_thickness=0,
+            column_spacing=300,
+            columns=[
+                ft.DataColumn(
+                    ft.Text("Time"),
+                    tooltip="アクセス時刻",
+                    on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
+                ),
+                ft.DataColumn(
+                    ft.Text("URL"),
+                    tooltip="アクセスされたドメイン",
+                    on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
+                ),
+            ],
+            rows=[]#[
+              #  ft.DataRow(
+              #      [ft.DataCell(ft.Text()), ft.DataCell(ft.Text("1"))],
+              #      selected=True,
+              #      on_select_changed=lambda e: print(f"row select changed: {e.data}"),
+              #  ),
+              #  ft.DataRow(
+              #      [ft.DataCell(ft.Text("B")), ft.DataCell(ft.Text("2"))],
+              #      selected=False
+              #
+              #  ),
+                
+          #  ],
+    )
+    #タブ
     tab = ft.Tabs(
         selected_index=0,
         animation_duration=300,
@@ -121,7 +171,9 @@ def main(page: ft.Page):
             ),
             ft.Tab(
                 text="Bad TLD List",
-                content=ft.Text("This is Tab 2"),
+                content=ft.Container(
+                    content=data2
+                ),
             ),
             ft.Tab(
                 text="Reputation Checker",
@@ -136,7 +188,7 @@ def main(page: ft.Page):
      
      
     
-    
+    #ページ構成
     page.add(
         ft.Row(
             [
