@@ -11,7 +11,7 @@ def main(page: ft.Page):
 
 
         
-    
+    page.title = "Tools for Soc Analyst"
     error_flag = -1
     selected_filepath = ft.Text()
     
@@ -32,7 +32,35 @@ def main(page: ft.Page):
             page.update()
         else:
             path = selected_filepath.value
-            read = test.file_open(path)
+            #times,urls = test.file_open(path)
+            li = [["18:10","a.com"],["18:11","b.com"],["18:20","c.com"]]
+            logs = []
+            
+            for i,j in li:
+                row = ft.DataRow(
+                    [
+                        ft.DataCell(ft.Text(i)), ft.DataCell(ft.Text(j))
+                    ],
+
+                )
+                logs.append(row)
+            data.columns = [
+                    ft.DataColumn(
+                        ft.Text("Time"),
+                        tooltip="アクセス時刻",
+                        on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
+                    ),
+                    ft.DataColumn(
+                        ft.Text("URL"),
+                        tooltip="アクセスされたドメイン",
+                        on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
+                    ),
+                ]
+                
+            data.rows = logs
+            
+            
+            page.update()
             
             
     
@@ -61,27 +89,28 @@ def main(page: ft.Page):
                 ft.DataColumn(
                     ft.Text("URL"),
                     tooltip="アクセスされたドメイン",
-                    numeric=True,
                     on_sort=lambda e: print(f"{e.column_index}, {e.ascending}"),
                 ),
             ],
-            rows=[
-                ft.DataRow(
-                    [ft.DataCell(ft.Text()), ft.DataCell(ft.Text("1"))],
-                    selected=True,
-                    on_select_changed=lambda e: print(f"row select changed: {e.data}"),
-                ),
-                ft.DataRow(
-                    [ft.DataCell(ft.Text("B")), ft.DataCell(ft.Text("2"))],
-                    selected=False
-
-                ),
-            ],
-        )
+            rows=[]#[
+              #  ft.DataRow(
+              #      [ft.DataCell(ft.Text()), ft.DataCell(ft.Text("1"))],
+              #      selected=True,
+              #      on_select_changed=lambda e: print(f"row select changed: {e.data}"),
+              #  ),
+              #  ft.DataRow(
+              #      [ft.DataCell(ft.Text("B")), ft.DataCell(ft.Text("2"))],
+              #      selected=False
+              #
+              #  ),
+                
+          #  ],
+    )
     
     tab = ft.Tabs(
         selected_index=0,
         animation_duration=300,
+        scrollable=True,
         tabs=[
             ft.Tab(
                 text="URL List",
@@ -96,7 +125,10 @@ def main(page: ft.Page):
             ),
             ft.Tab(
                 text="Reputation Checker",
-                content=ft.Text("This is Tab 3"),
+                content=ft.Container(
+                    content=ft.ElevatedButton(text="チェック"),
+                    alignment=ft.alignment.Alignment(-0.95,-0.95)
+                ),
             ),
         ],
         expand=1,
@@ -119,7 +151,7 @@ def main(page: ft.Page):
         
         ft.Row(
             [
-            ft.FilledButton(text="Check", on_click=check_btn),
+            ft.FilledButton(text="実行", on_click=check_btn),
            # selected_filepath,    
            # ft.FilledButton(text="URL List"),
            # ft.FilledButton(text="Bad TLD Check"),
